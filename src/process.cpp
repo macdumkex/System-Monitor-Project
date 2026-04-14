@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <linux_parser.h>
 
 #include "process.h"
 
