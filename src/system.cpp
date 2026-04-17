@@ -15,10 +15,27 @@ using std::string;
 using std::vector;
 
 // TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+Processor& System::Cpu() {
+    cpu_.Utilization();
+    return cpu_;
+}
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() { 
+    vector<int> currentPids = LinuxParser::Pids();
+    for (int pid : currentPids) {
+        if (std::find_if(processes_.begin(), processes_.end(), [pid](const Process& p) { return p.Pid() == pid; }) == processes_.end()) {
+            Process process(pid);
+            processes_.emplace_back(process);
+        }
+    }
+    
+    //find if processes_ vector has a process that is not in the current list of PIDs and remove it from processes_ vector
+    processes_.erase(std::remove_if(processes_.begin(), processes_.end(), [](const Process& p) {
+        return std::find(currentPids.begin(), currentPids.end(), p.Pid()) == currentPids.end();
+    }), processes_.end());
+    return processes_;
+}
 
 std::string System::Kernel() { 
     return LinuxParser::Kernel();
