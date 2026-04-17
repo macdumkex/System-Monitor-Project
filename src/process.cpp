@@ -15,45 +15,36 @@ using std::vector;
 Process::Process(int pid){
     this->pid = pid;
 }
-// TODO: Return this process's ID
+
 int Process::Pid() const{ 
      return pid; 
 }
 
-// TODO: Return this process's CPU utilization
 float Process::CpuUtilization() const{ 
-    long activeJiffies = LinuxParser::ActiveJiffies(pid);
-    std::cout<<"Uptime: "<<UpTime()<<std::endl;
-    std::cout<<"StartTime: "<<StartTime()<<std::endl;
-    long seconds = UpTime()-StartTime();
+    float activeSeconds = LinuxParser::ActiveJiffies(pid)/sysconf(_SC_CLK_TCK);
+    long seconds = LinuxParser::UpTime()-UpTime();
     if (seconds > 0) {
-        return static_cast<float>(activeJiffies) / seconds;
+        return activeSeconds / seconds;
     }
     return 0;
 }
 
-// TODO: Return the command that generated this process
-string Process::Command() const { return string(); }
+string Process::Command() const {
+    return LinuxParser::Command(pid);
+}
 
-// TODO: Return this process's memory utilization
-string Process::Ram() const { return string(); }
+string Process::Ram() const { 
+    return LinuxParser::Ram(pid); 
+}
 
-// TODO: Return the user (name) that generated this process
 string Process::User() const {
     return LinuxParser::User(pid);
 }
 
-// TODO: Return the age of this process (in seconds)
 long int Process::UpTime() const {
     return LinuxParser::UpTime(pid);
 }
 
-long int Process::StartTime() const {
-    return LinuxParser::StartTime(pid);
-}
-
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const { 
     if (this->CpuUtilization() < a.CpuUtilization()) {
         return true;
