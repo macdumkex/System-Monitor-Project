@@ -266,7 +266,7 @@ string LinuxParser::Ram(int pid) {
         if (key == "VmData:") {
           long ram_kB = stol(value);
           long ram_MB = ram_kB / 1024;
-          return std::to_string(ram_MB) + " MB";
+          return std::to_string(ram_MB);
         }
       }
     }
