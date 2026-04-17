@@ -44,6 +44,7 @@ std::vector<std::string> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
+long StartTime(int pid);
 long IdleJiffies();
 
 // Processes
